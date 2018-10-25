@@ -184,3 +184,6 @@ window.addEventListener('load', function loadHandler () {
 
   window.removeEventListener('load', loadHandler)
 })
+
+require('./custom-init.js');
+
