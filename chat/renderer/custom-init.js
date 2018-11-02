@@ -1,7 +1,7 @@
 const {remote} = require('electron')
 
 
-const directMessagesHTML = '<content role="listitem" data-group-id="space/AAAAP1rGZzg" style="order: 1;"><div role="heading" aria-level="2" class="k7aBq"><div class="aOHsTc wJNchb" jsname="dms">Direct Messages</div></div></content>';
+const directMessagesHTML = '<content role="listitem" data-group-id="dm" class="dm-header" style="order: 1;"><div role="heading" aria-level="2" class="k7aBq"><div class="aOHsTc wJNchb" jsname="dms">Direct Messages</div></div></content>';
 
 document.addEventListener("keydown", function(e) {
   if (e.which === 123) {
@@ -81,9 +81,11 @@ function watchMainPane() {
 function initializeSortedRoomList(mainPane) {
   var recentRooms = mainPane.querySelector("div.vHL80e > div[role='list']");
 
-  var directMessagesTemplate = document.createElement('template');
-  directMessagesTemplate.innerHTML = directMessagesHTML;
-  recentRooms.appendChild(directMessagesTemplate.content.firstChild);
+  if (recentRooms.querySelector("content.dm-header") == null) {
+    var directMessagesTemplate = document.createElement('template');
+    directMessagesTemplate.innerHTML = directMessagesHTML;
+    recentRooms.appendChild(directMessagesTemplate.content.firstChild);
+  }
 
   var config = { childList: true, subtree: true }
 
@@ -112,7 +114,9 @@ function partition(array, isValid) {
 
 function organizeRooms(parentNode) {
   var items = Array.from(parentNode.querySelectorAll("content.dHI9xe"));
-  var [roomItems, dmItems] = partition(items, (room) => room.querySelector(".t5F5nf > .w3vN9b") == null);
+  var [roomItems, dmItems] = partition(items, (room) => {
+    return room.querySelector(".t5F5nf > .w3vN9b") == null && !room.getAttribute("data-group-id").startsWith("newdm");
+  });
 
   roomItems.forEach (e => { e.style.order = 0; });
   dmItems.forEach (e => { e.style.order = 2; });
