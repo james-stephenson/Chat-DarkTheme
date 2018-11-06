@@ -1,7 +1,6 @@
 const {remote} = require('electron')
 
-
-const directMessagesHTML = '<content role="listitem" data-group-id="dm" class="dm-header" style="order: 1;"><div role="heading" aria-level="2" class="k7aBq"><div class="aOHsTc wJNchb" jsname="dms">Direct Messages</div></div></content>';
+const directMessagesHeader = '<content role="listitem" data-group-id="dm" class="dm-header" style="order: 1;"><div role="heading" aria-level="2" class="k7aBq"><div class="aOHsTc wJNchb" jsname="dms">Direct Messages</div></div></content>';
 
 document.addEventListener("keydown", function(e) {
   if (e.which === 123) {
@@ -81,26 +80,28 @@ function watchMainPane() {
 function initializeSortedRoomList(mainPane) {
   var recentRooms = mainPane.querySelector("div.vHL80e > div[role='list']");
 
+  // Insert the "Direct Messages" header if it does not exist
   if (recentRooms.querySelector("content.dm-header") == null) {
-    var directMessagesTemplate = document.createElement('template');
-    directMessagesTemplate.innerHTML = directMessagesHTML;
-    recentRooms.appendChild(directMessagesTemplate.content.firstChild);
+    var template = document.createElement('template');
+    template.innerHTML = directMessagesHeader;
+    recentRooms.appendChild(template.content.firstChild);
   }
-
-  var config = { childList: true, subtree: true }
 
   organizeRooms(recentRooms);
-  var callback = function(mutationsList, observer) {
-    mutationsList.forEach((mutation) => {
-      switch(mutation.type) {
-        case 'childList':
-          organizeRooms(recentRooms);
-          break;
-      }
-    });
-  }
 
-  var observer = new MutationObserver(callback);
+  var observer = new MutationObserver(
+    (mutationsList, observer) => {
+      mutationsList.forEach((mutation) => {
+        switch(mutation.type) {
+          case 'childList':
+            organizeRooms(recentRooms);
+            break;
+        }
+      });
+    }
+  );
+
+  var config = { childList: true, subtree: true }
   observer.observe(recentRooms, config);
 
   return observer;
