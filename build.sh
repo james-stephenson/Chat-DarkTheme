@@ -8,12 +8,12 @@ if [[ ! -e /Applications/Chat.app/Contents/Resources/electron.asar.orig ]]; then
   cp /Applications/Chat.app/Contents/Resources/electron.asar{,.orig}
 fi
 
-asar extract /Applications/Chat.app/Contents/Resources/electron.asar.orig build
+node_modules/asar/bin/asar.js extract /Applications/Chat.app/Contents/Resources/electron.asar.orig build
 
 echo "require('./custom-init.js');" >> build/renderer/init.js
 cp src/custom-init.js build/renderer/.
 
 rm -f electron.asar
-asar pack build electron.asar
+node_modules/asar/bin/asar.js pack build electron.asar
 
 cp electron.asar /Applications/Chat.app/Contents/Resources/electron.asar

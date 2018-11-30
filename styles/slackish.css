@@ -45,6 +45,14 @@
   padding: 10px 0 5px 0;
 }
 
+.yg4pvb {
+  margin-top: 10px;
+}
+
+.yg4pvb:before {
+  background: none;
+}
+
 /* Reduce right margin in sidebar */
 .n5yyEc {
   margin-right: 4px;
