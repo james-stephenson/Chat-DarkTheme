@@ -214,6 +214,10 @@ channels in sidebar with the new height */
   margin: 2px 6px 0 6px;
 }
 
+/* Vertically align triple dots buttons within the "View Members" dialog */
+.NLsfMb .Lw7GHd {
+  margin-top: 10px;
+}
 
 /* Time and menu buttons and clock for channels inactive and active colors */
 .sFuxxd {
